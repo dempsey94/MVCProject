@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mvcproject-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      run: mvcproject
+  template:
+    metadata:
+      labels:
+        run: mvcproject
+    spec:
+      containers:
+      - name: mvcproject
+        image: dotnetcore:latest
+        imagePullPolicy: Never
+        # resources:
+        #   limits:
+        #     memory: "128Mi"
+        #     cpu: "500m"
+        ports:
+        - containerPort: 5001
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mvcproject
+  # labels:
+  #   run: mvcproject
+spec:
+  selector:
+    run: mvcproject
+  ports:
+  - protocol: TCP
+    port: 5001
+    nodePort: 30033
+  type: NodePort
